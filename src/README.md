@@ -9,3 +9,8 @@
 https://www.fisicaexe.com.br/fisica2/mecanica/cinematica/cinematica12_ns1/cinematica12_ns1.html
 
 https://en.wikipedia.org/wiki/Piston_motion_equations
+
+[Car Parts](https://www.howacarworks.com/images/142/undefined_w1400.jpg)
+[Car Parts 2](https://4.bp.blogspot.com/-_F2A8d4a2Bw/TnN7zw1xsfI/AAAAAAAAAUE/c_PwnTLQV6Y/s640/F14-03.jpg)
+[Basic components engine](https://www.mecholic.com/2018/09/basic-components-of-engine.html)
+[Basic components 2](https://2.bp.blogspot.com/-OKjZLTC1BHo/W5k38X3ASfI/AAAAAAAABSc/oHq9SmkHB44m0oBgoY7_5M1Sv03Q-ugXwCLcBGAs/s1600/engine%2Bcomponents1.png)
