@@ -12,10 +12,13 @@
 #include "base/interfaces/IMouse.h"
 #include "base/interfaces/IRender.h"
 #include "base/interfaces/IKeyboard.h"
+#include "entities/CarEngine2D.h"
 
 #define LANE_POINTS 100
 
 class SceneManager: public IRender, public IKeyboard{
+private:
+    CarEngine2D* carEngine2D;
 public:
     SceneManager();
 

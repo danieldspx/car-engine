@@ -47,6 +47,8 @@ public:
     T angle(Vector2D<T> v1);
 
     Vector2D<T> unit();
+
+    Vector2D<T> rotate(float angle);
 };
 
 template<class T>
@@ -136,6 +138,14 @@ T Vector2D<T>::angle(Vector2D<T> v1) {
         return angle;
     }
     return -angle;
+}
+
+template<class T>
+Vector2D<T> Vector2D<T>::rotate(float angle) {
+    float nX = x*cos(angle) - y*sin(angle);
+    float nY = x*sin(angle) + y*cos(angle);
+    x = nX;
+    y = nY;
 }
 
 template<class T>

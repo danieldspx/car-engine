@@ -13,6 +13,6 @@ add_executable(
         include/GL/freeglut_std.h
         include/GL/glut.h
         src/main.cpp
-        src/gl_canvas2d.cpp src/gl_canvas2d.h src/base/interfaces/IRender.h src/base/vectors/Vector2D.h src/base/interfaces/IMouse.h src/base/interfaces/IEntity.h src/SceneManager.h src/SceneManager.cpp src/base/interfaces/IKeyboard.h src/base/Utils.h)
+        src/gl_canvas2d.cpp src/gl_canvas2d.h src/base/interfaces/IRender.h src/base/vectors/Vector2D.h src/base/interfaces/IMouse.h src/base/interfaces/IEntity.h src/SceneManager.h src/SceneManager.cpp src/base/interfaces/IKeyboard.h src/base/Utils.h src/entities/CarEngine2D.cpp src/entities/CarEngine2D.h)
 
 target_link_libraries(canvas_clion ${OpenGlLinkers})

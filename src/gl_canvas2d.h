@@ -32,16 +32,19 @@ public:
     //desenha um poligono CONVEXO. Para um retangulo, deve-se passar 4 vertices
     static void polygon(float vx[], float vy[], int n_elems);
     static void polygonFill(float vx[], float vy[], int n_elems);
+    static void polygon(fvec2 vertices[], int elems);
+    static void polygonFill(fvec2 vertices[], int elems);
 
     //centro e raio do circulo
-    static void circle( float x, float y, float radius, int div );
-    static void circle( fvec2 center, float radius, int div );
+    static void circle( float x, float y, float radius, int div, float ang = 0);
+    static void circle( fvec2 center, float radius, int div, float ang = 0);
 
-    static void circleFill( float x, float y, float radius, int div );
-    static void circleFill( fvec2 center, float radius, int div );
+    static void circleFill( float x, float y, float radius, int div, float ang = 0);
+    static void circleFill( fvec2 center, float radius, int div, float ang = 0);
 
     //especifica a cor de desenho e de limpeza de tela
     static void color(float r, float g, float b);
+    static void color(int r, int g, int b);
     static void color(float r, float g, float b, float alpha);
     static void color(int index);
 
