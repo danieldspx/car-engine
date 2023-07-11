@@ -90,5 +90,5 @@ fabric.properties
 !.idea/runConfigurations
 
 build
-
+tests
 # End of https://www.toptal.com/developers/gitignore/api/clion+all

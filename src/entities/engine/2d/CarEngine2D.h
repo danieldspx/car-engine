@@ -6,15 +6,16 @@
 #define CANVAS_CLION_CARENGINE2D_H
 
 
-#include "../base/interfaces/IKeyboard.h"
-#include "../base/interfaces/IRender.h"
+#include "../../../base/interfaces/IKeyboard.h"
+#include "../../../base/interfaces/IRender.h"
 
 class CarEngine2D: public IRender, public IKeyboard {
 private:
     float angle, angularVelocity;
     int speedRPM;
+    fvec2 crankPosition;
 public:
-    explicit CarEngine2D(int speedRPM);
+    explicit CarEngine2D(fvec2 position, int speedRPM);
 
     void keyboardDown(int key) override;
 

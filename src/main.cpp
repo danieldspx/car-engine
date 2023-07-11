@@ -26,7 +26,7 @@
 
 int screenHeight = 700;
 int screenWidth = 900;
-SceneManager* sceneManager = new SceneManager();
+SceneManager* sceneManager = new SceneManager(static_cast<float>(screenWidth), static_cast<float>(screenHeight));
 auto previousTime = std::chrono::high_resolution_clock::now();
 
 void render()

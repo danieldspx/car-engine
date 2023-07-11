@@ -3,11 +3,12 @@
 //
 
 #include "CarEngine2D.h"
-#include "../gl_canvas2d.h"
+#include "../../../gl_canvas2d.h"
 
-CarEngine2D::CarEngine2D(int speedRPM) : speedRPM(speedRPM) {
+CarEngine2D::CarEngine2D(fvec2 position, int speedRPM) : speedRPM(speedRPM) {
     angle = 0;
     setRPM(speedRPM);
+    crankPosition = position;
 }
 
 void CarEngine2D::setRPM(int rpm) {
@@ -33,19 +34,18 @@ void CarEngine2D::render(float screenWidth, float screenHeight, float dt) {
 
     // Crank & Crankpin
     float crankWidth = 10;
-    fvec2 crankPos = {screenWidth / 2, 200};
     float crankRadius = 50;
     float crankMinorRadius = 10;
     CV::color(173, 173, 173);
-    CV::circle(crankPos, crankMinorRadius, 50, angle);
-    CV::circle(crankPos, crankRadius, 15, angle);
-    CV::circle(crankPos, crankRadius - crankWidth/2, 15, angle);
-    CV::circle(crankPos, crankRadius + crankWidth/2, 15, angle);
+    CV::circle(crankPosition, crankMinorRadius, 50, angle);
+    CV::circle(crankPosition, crankRadius, 15, angle);
+    CV::circle(crankPosition, crankRadius - crankWidth/2, 15, angle);
+    CV::circle(crankPosition, crankRadius + crankWidth/2, 15, angle);
     // Crankpin
     float crankPinRadius = 10;
     fvec2 crankPinPos = {
-            crankPos.x + crankRadius * cos(angle),
-            crankPos.y + crankRadius * sin(angle)
+            crankPosition.x + crankRadius * cos(angle),
+            crankPosition.y + crankRadius * sin(angle)
     };
     CV::color(102, 102, 102);
     CV::circleFill(crankPinPos, crankPinRadius, 50);
@@ -58,7 +58,7 @@ void CarEngine2D::render(float screenWidth, float screenHeight, float dt) {
     float pistonRadius = 30;
     float pistonSide = 2.0 * pistonRadius / sqrt(2);
     float halfPistonSide = pistonSide / 2.0;
-    fvec2 pistonPos = { crankPos.x, crankPos.y + crankRadius * cos(angleCrankPiston) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(angleCrankPiston) * sin(angleCrankPiston))};
+    fvec2 pistonPos = { crankPosition.x, crankPosition.y + crankRadius * cos(angleCrankPiston) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(angleCrankPiston) * sin(angleCrankPiston))};
     // Piston
     CV::color(102, 102, 102);
     CV::circle(pistonPos, pistonRadius, 4, PI/4);
@@ -79,7 +79,7 @@ void CarEngine2D::render(float screenWidth, float screenHeight, float dt) {
 
     // Cylinder
     float compressionGapHeight = 20;
-    fvec2 cylinderCenter = { crankPos.x, crankPos.y + rodHeight};
+    fvec2 cylinderCenter = { crankPosition.x, crankPosition.y + rodHeight};
     fvec2 cylinderVertices[] = {
             fvec2{cylinderCenter.x - halfPistonSide, cylinderCenter.y - crankRadius - halfPistonSide}, // Left-bottom
             fvec2{cylinderCenter.x + halfPistonSide, cylinderCenter.y - crankRadius - halfPistonSide}, // Right-bottom
