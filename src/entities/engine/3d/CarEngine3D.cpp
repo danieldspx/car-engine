@@ -9,7 +9,7 @@
 CarEngine3D::CarEngine3D(fvec3 position, int speedRPM): speedRPM(speedRPM) {
     crankPosition = position;
     setRPM(speedRPM);
-    crank = new Crank(crankPosition, speedRPM, 180, 50, 10);
+    crank = new Crank(crankPosition, speedRPM, 180, 60, 10);
 }
 
 void CarEngine3D::setRPM(int rpm) {

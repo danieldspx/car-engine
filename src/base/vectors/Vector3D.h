@@ -8,6 +8,15 @@
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
+#include "Vector4D.h"
+#include "Vector2D.h"
+#include "Matrix.h"
+
+template<class T>
+class Matrix;
+
+template<class T>
+class Vector2D;
 
 template<class T>
 struct Vector3D {
@@ -36,6 +45,8 @@ public:
 
     bool operator==(Vector3D<T> v);
 
+    bool operator!=(const Vector3D<T> &rhs) const;
+
     T &operator[](int idx);
 
     T distance(Vector3D<T> v1);
@@ -49,6 +60,10 @@ public:
     T angle(Vector3D<T> v1);
 
     Vector3D<T> unit();
+
+    Vector4D<T> toVector4(T w) const;
+
+    Matrix<T> toMatrix() const;
 
     Vector3D<T> rotate(float angle);
 
@@ -116,6 +131,23 @@ Vector3D<T> Vector3D<T>::operator*=(T v) {
 template<class T>
 bool Vector3D<T>::operator==(Vector3D<T> v) {
     return v.x == x && v.y == y && v.z == z;
+}
+
+template<class T>
+bool Vector3D<T>::operator!=(const Vector3D &rhs) const {
+    return !(rhs == *this);
+}
+
+template<class T>
+Vector4D<T> Vector3D<T>::toVector4(T w) const {
+    return Vector4D<T>(x, y, z, w);
+}
+
+template<class T>
+Matrix<T> Vector3D<T>::toMatrix() const {
+    Matrix<T> M(3, 1);
+    M.setCol(*this, 0);
+    return M;
 }
 
 template<class T>

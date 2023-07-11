@@ -15,9 +15,10 @@ class Crank: IRender {
 public:
     fvec3 center;
     float radius, depth, rollAngle, angularVelocity, perspectiveDistance;
-    int speedRPM;
+    float crankPinRadius;
+    int speedRPM, wireframeDivisions;
 
-    v3matrix crankVertices;
+    v3matrix crankVertices, crankPinVertices;
 
     Crank(fvec3 center, int speedRPM, float perspectiveDistance, float radius, float depth);
 
@@ -25,9 +26,13 @@ public:
     void setRPM(int rpm);
     void setPerspectiveDistance(float distance);
 
-    void generateVerticesMatrix();
+    void generateCrankVerticesMatrix();
 
     void drawCrank();
+
+    void generateCrankPinVerticesMatrix();
+
+    void drawCrankPin();
 };
 
 

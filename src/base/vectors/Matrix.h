@@ -5,17 +5,19 @@
 #ifndef CANVAS_CLION_MATRIX_H
 #define CANVAS_CLION_MATRIX_H
 
+#include <cmath>
 #include <cstdlib>
 #include <vector>
 #include <iostream>
+#include <type_traits>
 
 #include "Vector3D.h"
 #include "Vector4D.h"
 
-template<class t>
+template<class T>
 struct Vector3D;
 
-template<class t>
+template<class T>
 struct Vector4D;
 
 template<class T>
@@ -49,6 +51,7 @@ public:
     void printMatrix();
 
     Matrix<T> invert();
+    Matrix<T> clone();
 
     Vector3D<T> toVector3();
 
@@ -98,11 +101,23 @@ Matrix<T> Matrix<T>::operator*(Matrix<T> Mat) {
 }
 
 template<class T>
+typename std::enable_if<std::is_same<T, float>::value, void>::type
+printValue(const T& value) {
+    std::cout << " " << value;
+}
+
+template<class T>
+typename std::enable_if<std::is_same<T, Vector3D<float>>::value, void>::type
+printValue(const T& value) {
+    std::cout << "( " << value.x << ", " << value.y << ", " << value.z << " )";
+}
+
+template<class T>
 void Matrix<T>::printMatrix() {
     std::cout << std::endl;
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
-            std::cout << "( " << m[y][x].x << ", " << m[y][x].y << ", " << m[y][x].z << " )";
+            printValue(m[y][x]);
         }
         std::cout << std::endl;
     }
@@ -153,6 +168,17 @@ Matrix<T> Matrix<T>::invert() {
     }
 
     return truncate;
+}
+
+template<class T>
+Matrix<T> Matrix<T>::clone() {
+    Matrix<T> cloned(rows, cols);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cloned[i][j] = m[i][j];
+        }
+    }
+    return cloned;
 }
 
 template<class T>
@@ -234,8 +260,8 @@ Matrix<T> Matrix<T>::translate(const Vector3D<T> translationAmount) {
 template<class T>
 Matrix<T> Matrix<T>::rotateZ(float angle) {
     Matrix<T> R(4, 4);
-    R.m = {{cos(angle), -sin(angle), 0, 0},
-           {sin(angle), cos(angle),  0, 0},
+    R.m = {{std::cos(angle), -std::sin(angle), 0, 0},
+           {std::sin(angle), std::cos(angle),  0, 0},
            {0,          0,           1, 0},
            {0,          0,           0, 1}};
     return R;
@@ -276,6 +302,6 @@ Vector4D<T> Matrix<T>::toVector4() {
     return Vector4D<T>(m[0][0], m[1][0], m[2][0], m[3][0]);
 }
 
-typedef Matrix<fvec3> v3matrix;
+typedef Matrix<Vector3D<float>> v3matrix;
 
 #endif //CANVAS_CLION_MATRIX_H

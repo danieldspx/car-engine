@@ -19,7 +19,7 @@ public:
 
     Vector4D();
 
-//    Vector4D(Matrix<t> v);
+    Vector4D(Matrix<t> v);
 
     Vector4D<t> operator+(Vector4D<t> v2) const;
 
@@ -51,8 +51,7 @@ public:
 
     Vector4D<t> unit();
 
-//    Matrix<t> toMatrix() const;
-
+    Matrix<t> toMatrix() const;
 };
 
 template<class t>
@@ -161,17 +160,16 @@ bool Vector4D<t>::operator!=(const Vector4D &rhs) const {
     return !(rhs == *this);
 }
 
-//template<class t>
-//Matrix<t> Vector4D<t>::toMatrix() const {
-//    Matrix<t> M(4, 1);
-//    M.setCol(*this, 0);
-//    return M;
-//}
-//
-//template<class t>
-//Vector4D<t>::Vector4D(Matrix<t> matrix) : x(matrix.m[0][0]), y(matrix.m[1][0]), z(matrix.m[2][0]), w(matrix.m[3][0]) {
-//
-//}
+template<class t>
+Matrix<t> Vector4D<t>::toMatrix() const {
+    Matrix<t> M(4, 1);
+    M.setCol(*this, 0);
+    return M;
+}
+
+template<class t>
+Vector4D<t>::Vector4D(Matrix<t> matrix) : x(matrix.m[0][0]), y(matrix.m[1][0]), z(matrix.m[2][0]), w(matrix.m[3][0]) {
+}
 
 
 typedef Vector4D<int> ivec4;

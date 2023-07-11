@@ -8,6 +8,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <stdexcept>
+#include "Vector3D.h"
 
 template<class T>
 struct Vector2D {
@@ -47,6 +48,8 @@ public:
     T angle(Vector2D<T> v1);
 
     Vector2D<T> unit();
+
+    Vector3D<T> toVector3();
 
     Vector2D<T> rotate(float angle);
 };
@@ -113,6 +116,11 @@ T &Vector2D<T>::operator[](int idx) {
     if (idx == 0) return x;
     if (idx == 1) return y;
     throw std::out_of_range("Index out of bounds");
+}
+
+template<class T>
+Vector3D<T> Vector2D<T>::toVector3() {
+    return Vector3D<T>(x, y, 1);
 }
 
 template<class T>
