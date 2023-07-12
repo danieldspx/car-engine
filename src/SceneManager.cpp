@@ -9,7 +9,7 @@
 
 SceneManager::SceneManager(float screenWidth, float screenHeight) {
     rpm = 10;
-    perspectiveDistance = 250;
+    perspectiveDistance = 200;
     carEngine2D = new CarEngine2D(fvec2{screenWidth - 200, 200}, rpm);
     carEngine3D = new CarEngine3D(fvec3{200, 100, 200}, rpm, perspectiveDistance);
 }
