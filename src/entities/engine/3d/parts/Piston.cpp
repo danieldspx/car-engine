@@ -13,13 +13,18 @@ Piston::Piston(fvec3 center, int speedRPM, float perspectiveDistance, float radi
     center(center), speedRPM(speedRPM), perspectiveDistance(perspectiveDistance), radius(radius), height(height), rodHeight(rodHeight), crankInstance(crankInstance) {
         wireframeDivisions = 10;
         angle = initAngle;
-        rodWidth = 15;
+        rodSides = 10;
+        rodRadius = 8;
         setRPM(speedRPM);
         generatePistonVertices();
+        // Each row stores the points of the rod, the first row is the first rod-shape points
+        // in the bottom and the last row is the last rod-shape points in the top
+        rodVertices = Matrix<fvec3>(wireframeDivisions, rodSides);
 }
 
 void Piston::render(float screenWidth, float screenHeight, float dt) {
     drawPiston();
+    drawConnectingRod();
 }
 
 void Piston::setRPM(int rpm) {
@@ -36,33 +41,83 @@ void Piston::generatePistonVertices() {
     for (int row = 0; row < pistonVertices.rows; row++) {
         float angAcc = 0;
         for (int i = 0; i < wireframeDivisions; i++) {
-            pistonVertices[row][i] = fvec3{center.x + radius * cos(angAcc), center.y + row * heightIncr, center.z  + radius * sin(angAcc) };
+            pistonVertices[row][i] = fvec3{center.x + radius * cos(angAcc), center.y + row * heightIncr - height, center.z  + radius * sin(angAcc) };
 
             angAcc += circleAngIcre;
         }
     }
 }
 
+void Piston::generateRodVertices() {
+    auto crankPinCenter = crankInstance->getTransformedPinCenter();
+    auto pistonCenter = center + fvec3{0,getYChangeBasedOnPin() - height / 2,0};
+
+    // Going from crankPinCenter to pistonCenter
+    auto totalSteps = rodVertices.rows - 1;
+    auto stepX = (pistonCenter.x - crankPinCenter.x) / totalSteps;
+    auto stepY = (pistonCenter.y - crankPinCenter.y) / totalSteps;
+    auto stepZ = (pistonCenter.z - crankPinCenter.z) / totalSteps;
+
+    float circleAngIcre = PI_2 / rodSides;
+    for (int row = 0; row < rodVertices.rows; row++) {
+        float angAcc = 0;
+        for (int i = 0; i < rodVertices.cols; i++) {
+            rodVertices[row][i] = fvec3{
+                crankPinCenter.x + stepX * row + rodRadius * cos(angAcc),
+                crankPinCenter.y + stepY * row,
+                crankPinCenter.z + stepZ * row + rodRadius * sin(angAcc)
+            };
+            angAcc += circleAngIcre;
+        }
+    }
+}
+
 /**
- * Updates the piston Y coordinate acoording to the crank pin position
+ * Updates the piston Y coordinate according to the crank pin position
  * since they are attached
  */
 Matrix<Vector3D<float>> Piston::getTransformedPistonVertices() {
-    auto pinCenter = crankInstance->getTransformedPinCenter();
-    fvec3 baseY = {0, 1, 0};
-    printf("\n Pin Center: (%f, %f, %f)", pinCenter.x, pinCenter.y, pinCenter.z);
     auto transformedPistonVertices = pistonVertices.clone();
-    auto anglePistonCrank = baseY.angle(pinCenter);
-    printf("\nAngle: %f", anglePistonCrank);
-    auto crankRadius = crankInstance->radius;
+    auto deltaY = getYChangeBasedOnPin();
     for (int row = 0; row < pistonVertices.rows; row++) {
         for (int i = 0; i < pistonVertices.cols; i++) {
-            // Position equation: https://en.wikipedia.org/wiki/Piston_motion_equations
-            transformedPistonVertices[row][i].y += crankRadius * cos(anglePistonCrank) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(anglePistonCrank) * sin(anglePistonCrank));
+            transformedPistonVertices[row][i].y += deltaY;
         }
     }
 
     return transformedPistonVertices;
+}
+
+float Piston::getYChangeBasedOnPin() {
+    auto pinVector = crankInstance->crankPinUnitVector();
+    fvec2 baseY = {0, 1};
+    auto anglePistonCrank = baseY.angle(pinVector);
+//    printf("\n[3D]Angle Piston Crank: %f", anglePistonCrank * 180 / PI);
+    auto crankRadius = crankInstance->radius;
+
+    // Position equation: https://en.wikipedia.org/wiki/Piston_motion_equations
+    return crankRadius * cos(anglePistonCrank) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(anglePistonCrank) * sin(anglePistonCrank));
+}
+
+void Piston::drawConnectingRod() {
+    CV::color(87, 87, 87);
+
+    generateRodVertices();
+    for (int row = 0; row < rodVertices.rows; row++) {
+        for (int i = 0; i < rodVertices.cols; i++) {
+            auto currentVertex = rodVertices[row][i];
+            auto nextVertexOnLine = rodVertices[row][(i + 1) % rodVertices.cols];
+
+            CV::line(currentVertex.toPerspective(perspectiveDistance), nextVertexOnLine.toPerspective(perspectiveDistance));
+        }
+    }
+
+    for (int i = 0; i < rodVertices.cols; i++) {
+        auto bottomVertex = rodVertices[0][i];
+        auto topVertex = rodVertices[rodVertices.cols - 1][i];
+
+        CV::line(bottomVertex.toPerspective(perspectiveDistance), topVertex.toPerspective(perspectiveDistance));
+    }
 }
 
 void Piston::drawPiston() {

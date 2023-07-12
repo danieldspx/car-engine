@@ -55,6 +55,7 @@ void CarEngine2D::render(float screenWidth, float screenHeight, float dt) {
     fvec2 baseY = {0, 1};
     fvec2 radiusVect = { cos(angle), sin(angle) };
     float angleCrankPiston = baseY.angle(radiusVect);
+//    printf("\n[2D]Angle Piston Crank: %f", angleCrankPiston * 180 / PI);
     float pistonRadius = 30;
     float pistonSide = 2.0 * pistonRadius / sqrt(2);
     float halfPistonSide = pistonSide / 2.0;

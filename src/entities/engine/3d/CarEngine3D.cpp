@@ -9,13 +9,13 @@
 CarEngine3D::CarEngine3D(fvec3 position, int speedRPM): speedRPM(speedRPM) {
     crankPosition = position;
     setRPM(speedRPM);
-    float crankRadius = 60;
+    float crankRadius = 50;
     crank = new Crank(crankPosition, speedRPM, 180, crankRadius, 10);
 
     float initialPistonAngle = 0;
-    float rodHeight = 100;
+    float rodHeight = 110;
     auto pistonCenter = fvec3{ crankPosition.x, crankPosition.y + crankRadius * cos(initialPistonAngle) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(initialPistonAngle) * sin(initialPistonAngle)), crankPosition.z };
-    piston = new Piston(pistonCenter, speedRPM, 180, 20, 100, rodHeight, initialPistonAngle, crank);
+    piston = new Piston(pistonCenter, speedRPM, 180, 20, 80, rodHeight, initialPistonAngle, crank);
 }
 
 void CarEngine3D::setRPM(int rpm) {

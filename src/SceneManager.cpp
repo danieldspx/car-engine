@@ -8,7 +8,7 @@
 #include "entities/engine/2d/CarEngine2D.h"
 
 SceneManager::SceneManager(float screenWidth, float screenHeight) {
-    int rpm = 80;
+    int rpm = 10;
     carEngine2D = new CarEngine2D(fvec2{screenWidth - 200, 200}, rpm);
     carEngine3D = new CarEngine3D(fvec3{300, 200, 200}, rpm);
 }

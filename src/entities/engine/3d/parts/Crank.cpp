@@ -126,6 +126,10 @@ fvec3 Crank::getTransformedPinCenter() {
     return transformedCenter.toVector3();
 }
 
+fvec2 Crank::crankPinUnitVector() {
+    return fvec2 {cos(rollAngle), sin(rollAngle)};
+}
+
 Matrix<float> Crank::getPinTransformationMatrix() {
     auto translateOrigin = Matrix<float>::translate(center * -1);
     auto rotateZ = Matrix<float>::rotateZ(rollAngle);

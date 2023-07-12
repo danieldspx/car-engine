@@ -37,6 +37,8 @@ public:
     fvec3 getTransformedPinCenter();
 
     Matrix<float> getPinTransformationMatrix();
+
+    fvec2 crankPinUnitVector();
 };
 
 

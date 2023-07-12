@@ -13,13 +13,13 @@
 class Piston: IRender {
 public:
     fvec3 center;
-    float radius, height, angularVelocity, perspectiveDistance, angle, rodHeight, rodWidth;
-    int speedRPM, wireframeDivisions;
+    float radius, height, angularVelocity, perspectiveDistance, angle, rodHeight, rodRadius;
+    int speedRPM, wireframeDivisions, rodSides;
 
     // The crank this piston is attached
     Crank* crankInstance;
 
-    v3matrix pistonVertices;
+    v3matrix pistonVertices, rodVertices;
 
     Piston(fvec3 center, int speedRPM, float perspectiveDistance, float radius, float height, float rodHeight, float initAngle, Crank* crankInstance);
 
@@ -31,6 +31,14 @@ public:
     void drawPiston();
 
     Matrix<Vector3D<float>> getTransformedPistonVertices();
+
+    void drawConnectingRod();
+
+    void generateRodVertices();
+
+    float getYChangeBasedOnPin();
+
+    Matrix<Vector3D<float>> getTransformedRodVertices();
 };
 
 
