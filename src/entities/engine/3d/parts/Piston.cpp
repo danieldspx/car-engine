@@ -13,6 +13,7 @@ Piston::Piston(fvec3 center, int speedRPM, float perspectiveDistance, float radi
     center(center), speedRPM(speedRPM), perspectiveDistance(perspectiveDistance), radius(radius), height(height), rodHeight(rodHeight), crankInstance(crankInstance) {
         wireframeDivisions = 10;
         angle = initAngle;
+        yawAngle = pitchAngle = 0;
         rodSides = 10;
         rodRadius = 8;
         setRPM(speedRPM);
@@ -23,6 +24,9 @@ Piston::Piston(fvec3 center, int speedRPM, float perspectiveDistance, float radi
 }
 
 void Piston::render(float screenWidth, float screenHeight, float dt) {
+    if (rotateY) yawAngle += 2 * dt;
+    if (rotateX) pitchAngle += 2 * dt;
+
     drawPiston();
     drawConnectingRod();
 }
@@ -70,6 +74,21 @@ void Piston::generateRodVertices() {
             angAcc += circleAngIcre;
         }
     }
+
+    auto translateVector = crankPinCenter;
+    auto translateOrigin = Matrix<float>::translate( translateVector * -1 );
+    auto matrixRotateX = Matrix<float>::rotateX(pitchAngle);
+    auto matrixRotateY = Matrix<float>::rotateY(yawAngle);
+    auto translateOriginalPlace = Matrix<float>::translate(translateVector );
+
+    auto transfMatrix = translateOriginalPlace * matrixRotateY * matrixRotateX * translateOrigin;
+
+    for (int row = 0; row < rodVertices.rows; row++) {
+        for (int i = 0; i < rodVertices.cols; i++) {
+            auto transformedVertex = transfMatrix * rodVertices[row][i].toVector4(1);
+            rodVertices[row][i] = transformedVertex.toVector3();
+        }
+    }
 }
 
 /**
@@ -78,10 +97,23 @@ void Piston::generateRodVertices() {
  */
 Matrix<Vector3D<float>> Piston::getTransformedPistonVertices() {
     auto transformedPistonVertices = pistonVertices.clone();
-    auto deltaY = getYChangeBasedOnPin();
+
+    // In X we have to center according to the crankPinCenter
+    auto crankPinCenter = crankInstance->getTransformedPinCenter();
+    auto matrixRotateX = Matrix<float>::rotateX(pitchAngle);
+
+    // In Y we have to center according to the piston center
+    auto matrixRotateY = Matrix<float>::rotateY(yawAngle);
+
+    auto translateWithPin = Matrix<float>::translate(fvec3{ 0, getYChangeBasedOnPin(), 0 });
+
+
+    auto transfMatrix = Matrix<float>::translate( crankPinCenter ) * matrixRotateY * matrixRotateX * translateWithPin * Matrix<float>::translate( crankPinCenter * -1);
+
     for (int row = 0; row < pistonVertices.rows; row++) {
         for (int i = 0; i < pistonVertices.cols; i++) {
-            transformedPistonVertices[row][i].y += deltaY;
+            auto transformedVertex = transfMatrix * transformedPistonVertices[row][i].toVector4(1);
+            transformedPistonVertices[row][i] = transformedVertex.toVector3();
         }
     }
 
@@ -137,6 +169,25 @@ void Piston::drawPiston() {
         auto topVertex = transformedVertices[transformedVertices.cols - 1][i];
 
         CV::line(bottomVertex.toPerspective(perspectiveDistance), topVertex.toPerspective(perspectiveDistance));
+    }
+}
+
+void Piston::keyboardDown(int key) {
+
+}
+
+void Piston::keyboardUp(int key) {
+    if (key == 120 || key == 88) { // X
+        rotateX = !rotateX;
+        rotateY = false;
+        printf("\nRotating in X: %d\n", rotateX);
+    } else if (key == 121 || key == 89) { // Y
+        rotateY = !rotateY;
+        rotateX = false;
+        printf("\nRotating in Y: %d\n", rotateY);
+    } else if (key == 122 || key == 90) { // Z
+        rotateY = false;
+        rotateX = false;
     }
 }
 

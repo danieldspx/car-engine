@@ -9,8 +9,9 @@
 #include "../../../base/vectors/Vector2D.h"
 #include "parts/Crank.h"
 #include "parts/Piston.h"
+#include "../../../base/interfaces/IKeyboard.h"
 
-class CarEngine3D: public IRender {
+class CarEngine3D: public IRender, public IKeyboard {
 private:
     float angle, angularVelocity;
     int speedRPM;
@@ -24,6 +25,10 @@ public:
     void render(float screenWidth, float screenHeight, float dt) override;
 
     void setRPM(int rpm);
+
+    void keyboardDown(int key) override;
+
+    void keyboardUp(int key) override;
 };
 
 

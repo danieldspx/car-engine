@@ -21,6 +21,7 @@ class SceneManager: public IRender, public IKeyboard{
 private:
     CarEngine2D* carEngine2D;
     CarEngine3D* carEngine3D;
+    int rpm;
 public:
     SceneManager(float screenWidth, float screenHeight);
 

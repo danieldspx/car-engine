@@ -9,7 +9,7 @@
  * Radius is in the xy plane and depth is the z component to add when generating the vertices
  */
 Crank::Crank(fvec3 center, int speedRPM, float perspectiveDistance, float radius, float depth): center(center), speedRPM(speedRPM), radius(radius), depth(depth), perspectiveDistance(perspectiveDistance) {
-    rollAngle = 0;
+    rollAngle = pitchAngle = yawAngle = 0;
     wireframeDivisions = 30;
     crankPinRadius = 30;
     crankPinDivisions = 12;
@@ -19,7 +19,10 @@ Crank::Crank(fvec3 center, int speedRPM, float perspectiveDistance, float radius
 }
 
 void Crank::render(float screenWidth, float screenHeight, float dt) {
-    rollAngle += angularVelocity * dt;
+    if (rotateY) yawAngle += 2 * dt;
+    if (rotateX) pitchAngle += 2 * dt;
+    if (rotateZ) rollAngle += angularVelocity * dt;
+
     drawCrank();
     drawCrankPin();
 }
@@ -49,10 +52,12 @@ void Crank::drawCrank() {
     Matrix<fvec3> transformedVertices(crankVertices.rows, crankVertices.cols);
 
     auto translateOrigin = Matrix<float>::translate(center * -1);
-    auto rotateZ = Matrix<float>::rotateZ(rollAngle);
+    auto matrixRotateZ = Matrix<float>::rotateZ(rollAngle);
+    auto matrixRotateX = Matrix<float>::rotateX(pitchAngle);
+    auto matrixRotateY = Matrix<float>::rotateY(yawAngle);
     auto translateCenter = Matrix<float>::translate(center);
 
-    auto transfMatrix = translateCenter * rotateZ * translateOrigin;
+    auto transfMatrix = translateCenter  * matrixRotateZ * matrixRotateY * matrixRotateX * translateOrigin;
 
     for (int i = 0; i < crankVertices.rows; i++) {
         for (int j = 0; j < crankVertices.cols; j++) {
@@ -172,14 +177,39 @@ fvec2 Crank::crankPinUnitVector() {
 
 Matrix<float> Crank::getPinTransformationMatrix() {
     auto translateOrigin = Matrix<float>::translate(center * -1);
-    auto rotateZ = Matrix<float>::rotateZ(rollAngle);
+    auto matrixRotateZ = Matrix<float>::rotateZ(rollAngle);
+    auto matrixRotateX = Matrix<float>::rotateX(pitchAngle);
+    auto matrixRotateY = Matrix<float>::rotateY(yawAngle);
     auto translateCenter = Matrix<float>::translate(center);
 
-    return translateCenter * rotateZ * translateOrigin;
+    return translateCenter * matrixRotateZ * matrixRotateY * matrixRotateX  * translateOrigin;
 }
 
 void Crank::setPerspectiveDistance(float distance) {
     perspectiveDistance = distance;
+}
+
+void Crank::keyboardDown(int key) {
+
+}
+
+void Crank::keyboardUp(int key) {
+    if (key == 120 || key == 88) { // X
+        rotateX = !rotateX;
+        rotateZ = false;
+        rotateY = false;
+        printf("\nRotating in X: %d\n", rotateX);
+    } else if (key == 121 || key == 89) { // Y
+        rotateY = !rotateY;
+        rotateZ = false;
+        rotateX = false;
+        printf("\nRotating in Y: %d\n", rotateY);
+    } else if (key == 122 || key == 90) { // Z
+        rotateZ = !rotateZ;
+        rotateY = false;
+        rotateX = false;
+        printf("\nRotating in Z: %d\n", rotateZ);
+    }
 }
 
 

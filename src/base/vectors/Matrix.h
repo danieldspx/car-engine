@@ -270,9 +270,9 @@ Matrix<T> Matrix<T>::rotateZ(float angle) {
 template<class T>
 Matrix<T> Matrix<T>::rotateY(float angle) {
     Matrix<T> R(4, 4);
-    R.m = {{cos(angle),  0, sin(angle), 0},
+    R.m = {{std::cos(angle),  0, std::sin(angle), 0},
            {0,           1, 0,          0},
-           {-sin(angle), 0, cos(angle), 0},
+           {-std::sin(angle), 0, std::cos(angle), 0},
            {0,           0, 0,          1}};
     return R;
 }
@@ -281,8 +281,8 @@ template<class T>
 Matrix<T> Matrix<T>::rotateX(float angle) {
     Matrix<T> R(4, 4);
     R.m = {{1, 0,          0,           0},
-           {0, cos(angle), -sin(angle), 0},
-           {0, sin(angle), cos(angle),  0},
+           {0, std::cos(angle), -std::sin(angle), 0},
+           {0, std::sin(angle), std::cos(angle),  0},
            {0, 0,          0,           1}};
     return R;
 }

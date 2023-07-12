@@ -10,13 +10,18 @@
 #include "../../../../base/vectors/Vector2D.h"
 #include "../../../../base/vectors/Vector3D.h"
 #include "../../../../base/vectors/Matrix.h"
+#include "../../../../base/interfaces/IKeyboard.h"
 
-class Crank: IRender {
+class Crank: public IRender, public IKeyboard {
 public:
     fvec3 center;
-    float radius, depth, rollAngle, angularVelocity, perspectiveDistance;
+    float radius, depth, rollAngle, pitchAngle, yawAngle, angularVelocity, perspectiveDistance;
     float crankPinRadius;
     int speedRPM, wireframeDivisions, crankPinDivisions;
+
+    bool rotateX = false; // Key 120
+    bool rotateY = false; // Key 121
+    bool rotateZ = true; // Key 122
 
     v3matrix crankVertices, crankPinVertices, transformedCrankPinVertices;
 
@@ -39,6 +44,10 @@ public:
     Matrix<float> getPinTransformationMatrix();
 
     fvec2 crankPinUnitVector();
+
+    void keyboardDown(int key) override;
+
+    void keyboardUp(int key) override;
 };
 
 

@@ -9,12 +9,20 @@
 #include "../../../../base/interfaces/IRender.h"
 #include "../../../../base/vectors/Vector2D.h"
 #include "../../../../base/vectors/Vector3D.h"
+#include "../../../../base/interfaces/IKeyboard.h"
 
-class Piston: IRender {
+class Piston: public IRender, public IKeyboard {
 public:
     fvec3 center;
-    float radius, height, angularVelocity, perspectiveDistance, angle, rodHeight, rodRadius;
+    float radius, height, angularVelocity, perspectiveDistance, angle, yawAngle, pitchAngle, rodHeight, rodRadius;
     int speedRPM, wireframeDivisions, rodSides;
+
+    bool rotateX = false; // Key 120
+    bool rotateY = false; // Key 121
+
+    void keyboardDown(int key) override;
+
+    void keyboardUp(int key) override;
 
     // The crank this piston is attached
     Crank* crankInstance;
