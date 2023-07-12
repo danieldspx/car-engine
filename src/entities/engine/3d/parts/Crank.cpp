@@ -103,13 +103,7 @@ void Crank::drawCrankPin() {
 
     Matrix<fvec3> transformedVertices(crankPinVertices.rows, crankPinVertices.cols);
 
-    auto crankPinCenter = center;
-
-    auto translateOrigin = Matrix<float>::translate(center * -1);
-    auto rotateZ = Matrix<float>::rotateZ(rollAngle);
-    auto translateCenter = Matrix<float>::translate(center);
-
-    auto transfMatrix = translateCenter * rotateZ * translateOrigin;
+    auto transfMatrix = getPinTransformationMatrix();
 
     for (int i = 0; i < crankPinVertices.rows; i++) {
         for (int j = 0; j < crankPinVertices.cols; j++) {
@@ -121,6 +115,23 @@ void Crank::drawCrankPin() {
     for (int i = 0; i < transformedVertices.rows; i++) {
         CV::circle(transformedVertices[i][0].toPerspective(perspectiveDistance), crankPinRadius, 50);
     }
+}
+
+/**
+ * Returns the transformed center of the crank pin
+ */
+fvec3 Crank::getTransformedPinCenter() {
+    auto transformationMatrix = getPinTransformationMatrix();
+    auto transformedCenter = transformationMatrix * (center + fvec3{radius, 0, 0}).toVector4(1);
+    return transformedCenter.toVector3();
+}
+
+Matrix<float> Crank::getPinTransformationMatrix() {
+    auto translateOrigin = Matrix<float>::translate(center * -1);
+    auto rotateZ = Matrix<float>::rotateZ(rollAngle);
+    auto translateCenter = Matrix<float>::translate(center);
+
+    return translateCenter * rotateZ * translateOrigin;
 }
 
 void Crank::setPerspectiveDistance(float distance) {

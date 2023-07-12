@@ -18,7 +18,7 @@ public:
     float crankPinRadius;
     int speedRPM, wireframeDivisions;
 
-    v3matrix crankVertices, crankPinVertices;
+    v3matrix crankVertices, crankPinVertices, transformedCrankPinVertices;
 
     Crank(fvec3 center, int speedRPM, float perspectiveDistance, float radius, float depth);
 
@@ -33,6 +33,10 @@ public:
     void generateCrankPinVerticesMatrix();
 
     void drawCrankPin();
+
+    fvec3 getTransformedPinCenter();
+
+    Matrix<float> getPinTransformationMatrix();
 };
 
 

@@ -58,7 +58,7 @@ void CarEngine2D::render(float screenWidth, float screenHeight, float dt) {
     float pistonRadius = 30;
     float pistonSide = 2.0 * pistonRadius / sqrt(2);
     float halfPistonSide = pistonSide / 2.0;
-    fvec2 pistonPos = { crankPosition.x, crankPosition.y + crankRadius * cos(angleCrankPiston) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(angleCrankPiston) * sin(angleCrankPiston))};
+    fvec2 pistonPos = { crankPosition.x, crankPosition.y + crankRadius * cos(angleCrankPiston) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(angleCrankPiston) * sin(angleCrankPiston)) };
     // Piston
     CV::color(102, 102, 102);
     CV::circle(pistonPos, pistonRadius, 4, PI/4);

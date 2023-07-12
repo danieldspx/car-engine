@@ -8,6 +8,7 @@
 #include "../../../base/interfaces/IRender.h"
 #include "../../../base/vectors/Vector2D.h"
 #include "parts/Crank.h"
+#include "parts/Piston.h"
 
 class CarEngine3D: public IRender {
 private:
@@ -16,6 +17,7 @@ private:
     fvec3 crankPosition;
 
     Crank* crank;
+    Piston* piston;
 public:
     CarEngine3D(fvec3 position, int speedRPM);
 
