@@ -10,8 +10,9 @@
  */
 Crank::Crank(fvec3 center, int speedRPM, float perspectiveDistance, float radius, float depth): center(center), speedRPM(speedRPM), radius(radius), depth(depth), perspectiveDistance(perspectiveDistance) {
     rollAngle = 0;
-    wireframeDivisions = 40;
+    wireframeDivisions = 30;
     crankPinRadius = 30;
+    crankPinDivisions = 12;
     setRPM(speedRPM);
     generateCrankVerticesMatrix();
     generateCrankPinVerticesMatrix();
@@ -89,22 +90,29 @@ void Crank::drawCrank() {
 }
 
 void Crank::generateCrankPinVerticesMatrix() {
-    int divisions = 10;
-    // Each row ([r][0]) is the location of the circle
-    crankPinVertices = Matrix<fvec3>(divisions, 1);
-    for (int i = 0; i < crankPinVertices.rows; i++) {
-        crankPinVertices[i][0] = center + fvec3{radius, 0, i * (depth / divisions)};;
+    // Each row is the depth of the circle and the columns are the points of the circle
+    crankPinVertices = Matrix<fvec3>(crankPinDivisions, crankPinDivisions);
+    float angIcr = PI_2 / crankPinDivisions;
+    float depthIcr = depth / crankPinDivisions;
+    for (int row = 0; row < crankPinVertices.rows; row++) {
+        float angAcc = 0;
+        for (int i = 0; i < crankPinVertices.cols; i++) {
+            crankPinVertices[row][i] =  fvec3{
+                center.x + radius + crankPinRadius * cos(angAcc),
+                center.y + crankPinRadius * sin(angAcc),
+                center.z + row * depthIcr
+            };
+            angAcc += angIcr;
+        }
     }
 }
 
 void Crank::drawCrankPin() {
-//    CV::color(31, 255, 72);
     CV::color(173, 173, 173);
 
+    // Transform Crank Pin
     Matrix<fvec3> transformedVertices(crankPinVertices.rows, crankPinVertices.cols);
-
     auto transfMatrix = getPinTransformationMatrix();
-
     for (int i = 0; i < crankPinVertices.rows; i++) {
         for (int j = 0; j < crankPinVertices.cols; j++) {
             auto transformedVertex = transfMatrix * crankPinVertices[i][j].toVector4(1);
@@ -112,8 +120,40 @@ void Crank::drawCrankPin() {
         }
     }
 
-    for (int i = 0; i < transformedVertices.rows; i++) {
-        CV::circle(transformedVertices[i][0].toPerspective(perspectiveDistance), crankPinRadius, 50);
+    // Draw circles
+    for (int row = 0; row < transformedVertices.rows; row++) {
+        for (int i = 0; i < transformedVertices.cols; i++) {
+            auto currentVertex = transformedVertices[row][i];
+            auto nextVertexOnLine = transformedVertices[row][(i + 1) % transformedVertices.cols];
+
+            CV::line(currentVertex.toPerspective(perspectiveDistance), nextVertexOnLine.toPerspective(perspectiveDistance));
+        }
+    }
+
+    // Draw a line from the front to the back on each point
+    for (int i = 0; i < transformedVertices.cols; i++) {
+        auto bottomVertex = transformedVertices[0][i];
+        auto topVertex = transformedVertices[transformedVertices.cols - 1][i];
+
+        CV::line(bottomVertex.toPerspective(perspectiveDistance), topVertex.toPerspective(perspectiveDistance));
+    }
+
+    int divisions = crankPinDivisions;
+    int jumpIncr = divisions <= crankPinVertices.cols ? crankPinVertices.cols / divisions : 1;
+    int halfSize = crankPinVertices.cols / 2;
+    for (int i = 0; i < divisions; i++) {
+        int indexA = i * jumpIncr;
+        int indexB = i * jumpIncr + halfSize;
+
+        CV::line(
+                transformedVertices[0][indexA%crankPinVertices.cols].toPerspective(perspectiveDistance),
+                transformedVertices[0][indexB%crankPinVertices.cols].toPerspective(perspectiveDistance)
+        );
+        auto lastIndex = transformedVertices.rows - 1;
+        CV::line(
+                transformedVertices[lastIndex][indexA%crankPinVertices.cols].toPerspective(perspectiveDistance),
+                transformedVertices[lastIndex][indexB%crankPinVertices.cols].toPerspective(perspectiveDistance)
+        );
     }
 }
 

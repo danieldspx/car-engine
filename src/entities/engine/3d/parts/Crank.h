@@ -16,7 +16,7 @@ public:
     fvec3 center;
     float radius, depth, rollAngle, angularVelocity, perspectiveDistance;
     float crankPinRadius;
-    int speedRPM, wireframeDivisions;
+    int speedRPM, wireframeDivisions, crankPinDivisions;
 
     v3matrix crankVertices, crankPinVertices, transformedCrankPinVertices;
 
