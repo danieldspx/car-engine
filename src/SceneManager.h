@@ -22,6 +22,7 @@ private:
     CarEngine2D* carEngine2D;
     CarEngine3D* carEngine3D;
     int rpm;
+    float perspectiveDistance;
 public:
     SceneManager(float screenWidth, float screenHeight);
 

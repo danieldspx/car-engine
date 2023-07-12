@@ -9,8 +9,9 @@
 
 SceneManager::SceneManager(float screenWidth, float screenHeight) {
     rpm = 10;
+    perspectiveDistance = 250;
     carEngine2D = new CarEngine2D(fvec2{screenWidth - 200, 200}, rpm);
-    carEngine3D = new CarEngine3D(fvec3{200, 100, 200}, rpm);
+    carEngine3D = new CarEngine3D(fvec3{200, 100, 200}, rpm, perspectiveDistance);
 }
 
 void SceneManager::render(float screenWidth, float screenHeight, float dt) {
@@ -23,6 +24,7 @@ void SceneManager::render(float screenWidth, float screenHeight, float dt) {
     CV::text(10, screenHeight - 55, "Isso foi feito pra facilitar a visualizacao do motor.");
 
     CV::text(10, screenHeight - 90, "Pressione A ou S para aumentar ou diminuir o RPM");
+    CV::text(10, screenHeight - 105, "Pressione P ou O para Projecao Perspectiva ou Ortografica");
 
     carEngine2D->render(screenWidth, screenHeight, dt);
     carEngine3D->render(screenWidth, screenHeight, dt);
@@ -40,10 +42,14 @@ void SceneManager::keyboardUp(int key) {
         rpm += 10;
         carEngine2D->setRPM(rpm);
         carEngine3D->setRPM(rpm);
-    } else if (key == 83 || key == 115) { // Letter A
+    } else if (key == 83 || key == 115) { // Letter S
         rpm -= 10;
         if (rpm < 10) rpm = 10;
         carEngine2D->setRPM(rpm);
         carEngine3D->setRPM(rpm);
+    } else if (key == 111 || key == 79) { // Letter O
+        carEngine3D->setOrthoMode();
+    } else if (key == 112 || key == 80) { // Letter O
+        carEngine3D->setPerspectiveDistance(perspectiveDistance);
     }
 }

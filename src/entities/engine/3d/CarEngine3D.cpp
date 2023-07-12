@@ -6,10 +6,9 @@
 #include "CarEngine3D.h"
 #include "../../../gl_canvas2d.h"
 
-CarEngine3D::CarEngine3D(fvec3 position, int speedRPM): speedRPM(speedRPM) {
+CarEngine3D::CarEngine3D(fvec3 position, int speedRPM, float perspectiveDistance): speedRPM(speedRPM) {
     crankPosition = position;
     float crankRadius = 50;
-    float perspectiveDistance = 250;
     crank = new Crank(crankPosition, speedRPM, perspectiveDistance, crankRadius, 10);
 
     float initialPistonAngle = 0;
@@ -41,4 +40,14 @@ void CarEngine3D::keyboardDown(int key) {
 void CarEngine3D::keyboardUp(int key) {
     crank->keyboardUp(key);
     piston->keyboardUp(key);
+}
+
+void CarEngine3D::setPerspectiveDistance(float distance) {
+    crank->setPerspectiveDistance(distance);
+    piston->setPerspectiveDistance(distance);
+}
+
+void CarEngine3D::setOrthoMode() {
+    // -1 will make the toPerspectiveOrOrtho to use the Ortho projection
+    setPerspectiveDistance(-1);
 }

@@ -140,7 +140,8 @@ void Piston::drawConnectingRod() {
             auto currentVertex = rodVertices[row][i];
             auto nextVertexOnLine = rodVertices[row][(i + 1) % rodVertices.cols];
 
-            CV::line(currentVertex.toPerspective(perspectiveDistance), nextVertexOnLine.toPerspective(perspectiveDistance));
+            CV::line(currentVertex.toPerspectiveOrOrtho(perspectiveDistance),
+                     nextVertexOnLine.toPerspectiveOrOrtho(perspectiveDistance));
         }
     }
 
@@ -148,7 +149,7 @@ void Piston::drawConnectingRod() {
         auto bottomVertex = rodVertices[0][i];
         auto topVertex = rodVertices[rodVertices.cols - 1][i];
 
-        CV::line(bottomVertex.toPerspective(perspectiveDistance), topVertex.toPerspective(perspectiveDistance));
+        CV::line(bottomVertex.toPerspectiveOrOrtho(perspectiveDistance), topVertex.toPerspectiveOrOrtho(perspectiveDistance));
     }
 }
 
@@ -160,7 +161,8 @@ void Piston::drawPiston() {
             auto currentVertex = transformedVertices[row][i];
             auto nextVertexOnLine = transformedVertices[row][(i + 1) % transformedVertices.cols];
 
-            CV::line(currentVertex.toPerspective(perspectiveDistance), nextVertexOnLine.toPerspective(perspectiveDistance));
+            CV::line(currentVertex.toPerspectiveOrOrtho(perspectiveDistance),
+                     nextVertexOnLine.toPerspectiveOrOrtho(perspectiveDistance));
         }
     }
 
@@ -168,7 +170,7 @@ void Piston::drawPiston() {
         auto bottomVertex = transformedVertices[0][i];
         auto topVertex = transformedVertices[transformedVertices.cols - 1][i];
 
-        CV::line(bottomVertex.toPerspective(perspectiveDistance), topVertex.toPerspective(perspectiveDistance));
+        CV::line(bottomVertex.toPerspectiveOrOrtho(perspectiveDistance), topVertex.toPerspectiveOrOrtho(perspectiveDistance));
     }
 }
 
@@ -189,6 +191,10 @@ void Piston::keyboardUp(int key) {
         rotateY = false;
         rotateX = false;
     }
+}
+
+void Piston::setPerspectiveDistance(float distance) {
+    perspectiveDistance = distance;
 }
 
 

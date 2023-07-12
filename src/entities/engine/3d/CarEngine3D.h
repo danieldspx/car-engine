@@ -20,7 +20,7 @@ private:
     Crank* crank;
     Piston* piston;
 public:
-    CarEngine3D(fvec3 position, int speedRPM);
+    CarEngine3D(fvec3 position, int speedRPM, float perspectiveDistance);
 
     void render(float screenWidth, float screenHeight, float dt) override;
 
@@ -29,6 +29,9 @@ public:
     void keyboardDown(int key) override;
 
     void keyboardUp(int key) override;
+
+    void setPerspectiveDistance(float distance);
+    void setOrthoMode();
 };
 
 

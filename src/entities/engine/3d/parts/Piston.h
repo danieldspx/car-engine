@@ -46,6 +46,8 @@ public:
 
     float getYChangeBasedOnPin();
 
+    void setPerspectiveDistance(float distance);
+
     Matrix<Vector3D<float>> getTransformedRodVertices();
 };
 

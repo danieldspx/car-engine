@@ -67,10 +67,12 @@ void Crank::drawCrank() {
     }
 
     for (int r = 0; r < transformedVertices.rows; r++) {
-        auto pFront = transformedVertices.m[r][0].toPerspective(perspectiveDistance);
-        auto pBack = transformedVertices.m[r][1].toPerspective(perspectiveDistance);
-        auto pNextFront = transformedVertices.m[(r+1)%transformedVertices.rows][0].toPerspective(perspectiveDistance);
-        auto pNextBack = transformedVertices.m[(r+1)%transformedVertices.rows][1].toPerspective(perspectiveDistance);
+        auto pFront = transformedVertices.m[r][0].toPerspectiveOrOrtho(perspectiveDistance);
+        auto pBack = transformedVertices.m[r][1].toPerspectiveOrOrtho(perspectiveDistance);
+        auto pNextFront = transformedVertices.m[(r + 1) % transformedVertices.rows][0].toPerspectiveOrOrtho(
+                perspectiveDistance);
+        auto pNextBack = transformedVertices.m[(r + 1) % transformedVertices.rows][1].toPerspectiveOrOrtho(
+                perspectiveDistance);
         CV::line(pFront, pBack);
 
         CV::line(pFront, pNextFront);
@@ -84,12 +86,12 @@ void Crank::drawCrank() {
         int indexB = i * jumpIncr + halfSize;
 
         CV::line(
-                transformedVertices.m[indexA%crankVertices.rows][0].toPerspective(perspectiveDistance),
-                transformedVertices.m[indexB%crankVertices.rows][0].toPerspective(perspectiveDistance)
+                transformedVertices.m[indexA % crankVertices.rows][0].toPerspectiveOrOrtho(perspectiveDistance),
+                transformedVertices.m[indexB % crankVertices.rows][0].toPerspectiveOrOrtho(perspectiveDistance)
         );
         CV::line(
-                transformedVertices.m[indexA%crankVertices.rows][1].toPerspective(perspectiveDistance),
-                transformedVertices.m[indexB%crankVertices.rows][1].toPerspective(perspectiveDistance)
+                transformedVertices.m[indexA % crankVertices.rows][1].toPerspectiveOrOrtho(perspectiveDistance),
+                transformedVertices.m[indexB % crankVertices.rows][1].toPerspectiveOrOrtho(perspectiveDistance)
         );
     }
 }
@@ -131,7 +133,8 @@ void Crank::drawCrankPin() {
             auto currentVertex = transformedVertices[row][i];
             auto nextVertexOnLine = transformedVertices[row][(i + 1) % transformedVertices.cols];
 
-            CV::line(currentVertex.toPerspective(perspectiveDistance), nextVertexOnLine.toPerspective(perspectiveDistance));
+            CV::line(currentVertex.toPerspectiveOrOrtho(perspectiveDistance),
+                     nextVertexOnLine.toPerspectiveOrOrtho(perspectiveDistance));
         }
     }
 
@@ -140,7 +143,7 @@ void Crank::drawCrankPin() {
         auto bottomVertex = transformedVertices[0][i];
         auto topVertex = transformedVertices[transformedVertices.cols - 1][i];
 
-        CV::line(bottomVertex.toPerspective(perspectiveDistance), topVertex.toPerspective(perspectiveDistance));
+        CV::line(bottomVertex.toPerspectiveOrOrtho(perspectiveDistance), topVertex.toPerspectiveOrOrtho(perspectiveDistance));
     }
 
     int divisions = crankPinDivisions;
@@ -151,13 +154,13 @@ void Crank::drawCrankPin() {
         int indexB = i * jumpIncr + halfSize;
 
         CV::line(
-                transformedVertices[0][indexA%crankPinVertices.cols].toPerspective(perspectiveDistance),
-                transformedVertices[0][indexB%crankPinVertices.cols].toPerspective(perspectiveDistance)
+                transformedVertices[0][indexA % crankPinVertices.cols].toPerspectiveOrOrtho(perspectiveDistance),
+                transformedVertices[0][indexB % crankPinVertices.cols].toPerspectiveOrOrtho(perspectiveDistance)
         );
         auto lastIndex = transformedVertices.rows - 1;
         CV::line(
-                transformedVertices[lastIndex][indexA%crankPinVertices.cols].toPerspective(perspectiveDistance),
-                transformedVertices[lastIndex][indexB%crankPinVertices.cols].toPerspective(perspectiveDistance)
+                transformedVertices[lastIndex][indexA % crankPinVertices.cols].toPerspectiveOrOrtho(perspectiveDistance),
+                transformedVertices[lastIndex][indexB % crankPinVertices.cols].toPerspectiveOrOrtho(perspectiveDistance)
         );
     }
 }

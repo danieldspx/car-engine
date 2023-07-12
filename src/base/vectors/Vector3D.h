@@ -67,7 +67,7 @@ public:
 
     Vector3D<T> rotate(float angle);
 
-    Vector2D<T> toPerspective(float distance);
+    Vector2D<T> toPerspectiveOrOrtho(float distance);
 };
 
 template<class T>
@@ -192,8 +192,14 @@ void Vector3D<T>::print() {
     std::cout << "x: " << x << " y: " << y << " z: " << z << std::endl;
 }
 
+/**
+ * If the distance is negative then we change to the orthographic perspective
+ */
 template<class T>
-Vector2D<T> Vector3D<T>::toPerspective(float distance) {
+Vector2D<T> Vector3D<T>::toPerspectiveOrOrtho(float distance) {
+    if (distance < 0) {
+        return Vector2D<T>{x , y};
+    }
     return Vector2D<T>{x * distance / z, y * distance / z};
 }
 
