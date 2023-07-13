@@ -13,7 +13,7 @@ CarEngine3D::CarEngine3D(fvec3 position, int speedRPM, float perspectiveDistance
 
     float initialPistonAngle = 0;
     float rodHeight = 110;
-    float angleBetweenPistons = 80;
+    float angleBetweenPistons = 60;
     float distanceFromCenter = sqrt(2*rodHeight*rodHeight * (1 - cos(angleBetweenPistons*PI/180)))/2;
     auto pistonsCenter = fvec3{ crankPosition.x, crankPosition.y + crankRadius * cos(initialPistonAngle) + sqrt(rodHeight*rodHeight - crankRadius*crankRadius * sin(initialPistonAngle) * sin(initialPistonAngle)), crankPosition.z };
     piston = new Piston(pistonsCenter - fvec3 {distanceFromCenter, 0, 0}, speedRPM, perspectiveDistance, 20, 80, rodHeight, initialPistonAngle, crank);
