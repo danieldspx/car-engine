@@ -19,6 +19,7 @@ private:
 
     Crank* crank;
     Piston* piston;
+    Piston* piston2;
 public:
     CarEngine3D(fvec3 position, int speedRPM, float perspectiveDistance);
 
